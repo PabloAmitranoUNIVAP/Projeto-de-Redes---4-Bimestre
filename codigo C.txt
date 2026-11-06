@@ -1,0 +1,60 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc, char *argv[]) {
+	int Contas[4][5];
+	int Falhas[4];
+	int i = 0, j, registros = 0;
+	int conts_al = 0, qtd_falhas;
+	
+	char continuar;
+	
+	printf("** Simulador de Alerta de Tentativas de Login **\n");
+	printf("Digite 0 se falhou, senao digite 1.\n\n");
+	
+	do {
+		printf("Conta %i:\n", i + 1);
+		registros = i + 1;
+		j = 0;
+		
+		while (j < 5){
+			scanf(" %i", &Contas[i][j]);
+			if (Contas[i][j] < 0 || Contas[i][j] > 1)
+				printf("Numero invalido, digite 0 ou 1.\n");
+			else j++;
+		}
+		
+		if (i + 1 < 4){
+			printf("Deseja continuar? (Y/N)\n");
+			scanf(" %c", &continuar);
+		}
+		
+		i++;
+	} while (i < 4 && (continuar == 'y' || continuar == 'Y'));
+	
+	for (i=0; i<registros; i++){
+		Falhas[i] = 0;
+		
+		for (j=0; j<5; j++)
+			if (Contas[i][j] == 0) ++Falhas[i];
+		
+		if (Falhas[i] >= 3) ++conts_al;
+		if (Falhas[i] > qtd_falhas) qtd_falhas = Falhas[i];
+	}
+	
+	printf("\nSituacao para cada conta:\n");
+	for (i=0; i<registros; i++){
+		printf("Conta %i: ", i + 1);
+		
+		for (j=0; j<5; j++) printf("%i ", Contas[i][j]);
+		printf("-> %i falhas -> ", Falhas[i]);
+		
+		if (Falhas[i] >= 3) printf("ALERTA\n");
+		else printf("OK\n");
+	}
+	
+	printf("\nQuantidade de contas com falha: %i\n", conts_al);
+	printf("Maior quantidade de falhas: %i", qtd_falhas);
+	
+	return 0;
+}
